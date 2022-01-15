@@ -8,7 +8,7 @@ with open("README.md", "r") as readme_file:
 requirements = ["pymongo==4.0"]
 
 setup(
-    name="TwitterDownloadApp",
+    name="twitterdownloadapp",
     version="0.0.1",
     author="Carlson Hoo",
     author_email="carlson.hoo@gmail.com",

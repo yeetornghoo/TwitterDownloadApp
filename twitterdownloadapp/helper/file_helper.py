@@ -1,8 +1,8 @@
 import shutil
 import os
-import pandas as pd
+#import pandas as pd
 import json
-from twitterdownloadapp.helper import datetime_helper, app_config_helper
+from twitterdownloadapp.helper import datetime_helper, config_helper
 
 
 def get_line_from_file(file_path):
@@ -20,18 +20,21 @@ def get_line_from_file(file_path):
 
 
 def get_items_from_file(file_path):
-    objs = []
+    dict_items = {}
     try:
         with open(file_path) as fp:
-            line = fp.readline()
-            while line:
-                for item in (line.strip().lower()).split():
-                    objs.append(item)
-                    line = fp.readline()
+            lines = fp.readlines()
+            for line in lines:
+                items = line.split("=")
+                if items is not None and len(items) >= 2:
+                    config_key = items[0].strip()
+                    config_value = items[1].strip()
+                    dict_item = {config_key:config_value}
+                    dict_items.update(dict_item)
+    except ValueError:
+        print("Error")
     finally:
-        fp.close()
-
-    return objs
+        return dict_items
 
 
 def create_tweeet_stream_file(file_name):
@@ -41,7 +44,7 @@ def create_tweeet_stream_file(file_name):
 
 
 def initiate_file(topic_name):
-    file_path = app_config_helper.get_twitter_raw_file(topic_name)
+    file_path = config_helper.get_twitter_raw_file(topic_name)
     try:
         if os.path.isfile(file_path):
             os.remove(file_path)
@@ -52,13 +55,13 @@ def initiate_file(topic_name):
 
 
 def backup_raw_file(file_path, topic_name):
-    log_file_path = app_config_helper.get_twitter_raw_file_log(topic_name)
+    log_file_path = config_helper.get_twitter_raw_file_log(topic_name)
     print("copied from " + file_path + " to " + log_file_path)
     shutil.copy(file_path, log_file_path)
 
 
 def is_raw_file_size_exceed(file_path):
-    max_file_size = int(app_config_helper.get_twitter_raw_file_size())
+    max_file_size = int(config_helper.get_twitter_raw_file_size())
     current_file_size = int(file_size(file_path))
     if current_file_size > max_file_size:
         return True
@@ -84,14 +87,14 @@ def file_size(file_path):
         return file_info.st_size
 
 
-def read_json_text_file_to_df(file_path):
-    df = pd.DataFrame()
-    file = open(file_path, "r", encoding="utf8")
-    lines = file.readlines()
-
-    for line in lines:
-        json_str = line.strip()
-        json_obj = json.loads(json_str)
-        df = df.append(json_obj, ignore_index=True)
-
-    return df
+# def read_json_text_file_to_df(file_path):
+#     df = pd.DataFrame()
+#     file = open(file_path, "r", encoding="utf8")
+#     lines = file.readlines()
+#
+#     for line in lines:
+#         json_str = line.strip()
+#         json_obj = json.loads(json_str)
+#         df = df.append(json_obj, ignore_index=True)
+#
+#     return df
