@@ -5,6 +5,7 @@ import re
 import tweepy
 from twitterdownloadapp import data_scraper
 from twitterdownloadapp.data_scraper.tweepy.authentication import get_oauth_handler
+from twitterdownloadapp.data_scraper.tweepy.tweet_api_config import TweetApiConfig
 from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
 from twitterdownloadapp.helper.reguler_expression_helper import (
     get_twitter_location_regexp_filter,
