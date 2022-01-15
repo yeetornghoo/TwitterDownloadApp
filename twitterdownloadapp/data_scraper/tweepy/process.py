@@ -1,7 +1,6 @@
 __author__ = "CH"
 
 import tweepy as tweepy
-
 from twitterdownloadapp.data_scraper.tweepy.authentication import get_oauth_handler
 from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
 
@@ -49,9 +48,9 @@ def process_stream_tweet(data, f):
         f.write('\n')
 """
 
-auth = get_oauth_handler()
-api = tweepy.API(auth, wait_on_rate_limit=True)
-conn = MongoConnection()
+# auth = get_oauth_handler()
+# api = tweepy.API(auth, wait_on_rate_limit=True)
+# conn = MongoConnection()
 
 
 class ProcessTweepy:

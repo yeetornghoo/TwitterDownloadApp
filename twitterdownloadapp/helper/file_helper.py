@@ -3,7 +3,7 @@ import os
 
 # import pandas as pd
 from twitterdownloadapp.helper import datetime_helper
-from twitterdownloadapp.helper import config_helper
+#from twitterdownloadapp.helper import config_helper
 
 
 def get_line_from_file(file_path):
@@ -44,30 +44,30 @@ def create_tweeet_stream_file(file_name):
     return output_file_name, f
 
 
-def initiate_file(topic_name):
-    file_path = config_helper.get_twitter_raw_file(topic_name)
-    try:
-        if os.path.isfile(file_path):
-            os.remove(file_path)
-        f = open(file_path, "w+")
-        return f
-    finally:
-        print("initiated!")
-
-
-def backup_raw_file(file_path, topic_name):
-    log_file_path = config_helper.get_twitter_raw_file_log(topic_name)
-    print("copied from " + file_path + " to " + log_file_path)
-    shutil.copy(file_path, log_file_path)
-
-
-def is_raw_file_size_exceed(file_path):
-    max_file_size = int(config_helper.get_twitter_raw_file_size())
-    current_file_size = int(file_size(file_path))
-    if current_file_size > max_file_size:
-        return True
-    else:
-        return False
+# def initiate_file(topic_name):
+#     file_path = config_helper.get_twitter_raw_file(topic_name)
+#     try:
+#         if os.path.isfile(file_path):
+#             os.remove(file_path)
+#         f = open(file_path, "w+")
+#         return f
+#     finally:
+#         print("initiated!")
+#
+#
+# def backup_raw_file(file_path, topic_name):
+#     log_file_path = config_helper.get_twitter_raw_file_log(topic_name)
+#     print("copied from " + file_path + " to " + log_file_path)
+#     shutil.copy(file_path, log_file_path)
+#
+#
+# def is_raw_file_size_exceed(file_path):
+#     max_file_size = int(config_helper.get_twitter_raw_file_size())
+#     current_file_size = int(file_size(file_path))
+#     if current_file_size > max_file_size:
+#         return True
+#     else:
+#         return False
 
 
 def write_to_file(topic_name, f, data):
