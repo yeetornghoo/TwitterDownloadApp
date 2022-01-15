@@ -1,39 +1,29 @@
 __author__ = "CH"
 
+import sys
 import json
-import re
 import tweepy
-from twitterdownloadapp import data_scraper
-from twitterdownloadapp.data_scraper.tweepy.tweet_api_config import TweetApiConfig
-from twitterdownloadapp.helper.reguler_expression_helper import (
-    get_twitter_location_regexp_filter,
-)
-
-regexp_str = get_twitter_location_regexp_filter()
-location_regexp = re.compile(regexp_str, re.IGNORECASE)
-
-
-def is_desired_location(json_input):
-    if location_regexp.search(str(json_input["text"])) or location_regexp.search(
-            str(json_input["user"]["location"])
-    ):
-        return True
-
-    if json_input["place"] is not None:
-        if (
-                location_regexp.search(str(json_input["place"]["id"]))
-                or location_regexp.search(str(json_input["place"]["full_name"]))
-                or location_regexp.search(str(json_input["place"]["country_code"]))
-        ):
-            return True
-    return False
+from twitterdownloadapp.data_scraper.tweepy import (
+    TWITTER_consumer_key,
+    TWITTER_consumer_secret,
+    TWITTER_access_token,
+    TWITTER_access_token_secret)
+from twitterdownloadapp.util.app_logging import AppLogging
 
 
 class StreamListener(tweepy.Stream):
+
+    def __init__(self, save_to_db, collection_name, consumer_key, consumer_secret, access_token, access_token_secret):
+        super().__init__(consumer_key, consumer_secret, access_token, access_token_secret)
+        self.collection_name = collection_name
+        self.save_to_db = save_to_db
+
     def on_data(self, data):
         json_input = json.loads(data)
         print(json_input)
-        # data_scraper.conn.insert_raw_twitter(json_input)
+        if self.save_to_db:
+            print("SAVE TO DB")
+            #data_scraper.conn.insert_raw_twitter(json_input)
         """
         if is_desired_location(json_input):
             json_input["cleaned_test"] = CleanString().run(json_input["text"])
@@ -47,16 +37,22 @@ class StreamListener(tweepy.Stream):
         print(status)
 
 
-def get_tweepy_stream():
+def get_tweepy_stream(save_to_db, collection_name):
     try:
+        consumer_key = TWITTER_consumer_key
+        consumer_secret = TWITTER_consumer_secret
+        access_token = TWITTER_access_token
+        access_token_secret = TWITTER_access_token_secret
         return StreamListener(
-            TweetApiConfig.TWITTER_consumer_key,
-            TweetApiConfig.TWITTER_consumer_secret,
-            TweetApiConfig.TWITTER_access_token,
-            TweetApiConfig.TWITTER_access_token_secret
+            save_to_db,
+            collection_name,
+            consumer_key,
+            consumer_secret,
+            access_token,
+            access_token_secret
         )
-    finally:
-        return None
+    except Exception as e:
+        AppLogging().exception(e)
 
 
 class TweepyStream:
@@ -67,23 +63,22 @@ class TweepyStream:
 
     def __init__(
             self,
-            _bottom_left_long,
-            _bottom_left_lat,
-            _top_right_long,
-            _top_right_lat
+            save_to_db,
+            collection_name
     ):
-        if _bottom_left_long is not None and len(_bottom_left_long.strip()) > 0:
-            self.bottom_left_long = _bottom_left_long
-        if _bottom_left_lat is not None and len(_bottom_left_lat.strip()) > 0:
-            self.bottom_left_lat = _bottom_left_lat
-        if _top_right_long is not None and len(_top_right_long.strip()) > 0:
-            self.top_right_long = _top_right_long
-        if _top_right_lat is not None and len(_top_right_lat.strip()) > 0:
-            self.top_right_lat = _top_right_lat
+        self.save_to_db = save_to_db
+        self.collection_name = collection_name
 
-    def search_words(
-            self, stream, search_words
-    ):
+    def search_words(self, stream, search_words):
+
+        AppLogging().info("Search area top-right:{}, bottom-left:{}!".format(
+            (self.top_right_long, self.top_right_lat),
+            (self.bottom_left_long, self.bottom_left_lat)
+        ))
+        AppLogging().info("Search keyword:{}!".format(search_words))
+        if self.save_to_db:
+            AppLogging().info("Save to collection:{}!".format(self.collection_name))
+
         stream.filter(
             track=search_words,
             locations=[
@@ -95,7 +90,32 @@ class TweepyStream:
             threaded=True,
         )
 
-    def run(self, search_words):
-        stream = get_tweepy_stream()
-        search_words = ["umno", "Pakatan Harapan"]
-        self.search_words(stream, search_words)
+    def run(
+            self,
+            search_words,
+            bottom_left_long,
+            bottom_left_lat,
+            top_right_long,
+            top_right_lat
+    ):
+        try:
+            stream = get_tweepy_stream(self.save_to_db, self.collection_name)
+            if stream is not None:
+
+                if bottom_left_long is not None:
+                    self.bottom_left_long = bottom_left_long
+                if bottom_left_lat is not None:
+                    self.bottom_left_lat = bottom_left_lat
+                if top_right_long is not None:
+                    self.top_right_long = top_right_long
+                if top_right_lat is not None:
+                    self.top_right_lat = top_right_lat
+
+                self.search_words(stream, search_words)
+
+                AppLogging().info("Tweepy stream has started")
+
+            else:
+                raise Exception("Tweepy stream failed to initiate")
+        except Exception as e:
+            AppLogging().exception(e)

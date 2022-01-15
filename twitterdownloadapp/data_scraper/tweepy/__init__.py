@@ -1,7 +1,7 @@
 __author__ = "CH"
-# import tweepy
-# from twitterdownloadapp.data_scraper.tweepy.authentication import get_oauth_handler
-# from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
-# auth = get_oauth_handler()
-# api = tweepy.API(auth, wait_on_rate_limit=True)
-# conn = MongoConnection()
+
+from twitterdownloadapp.data_scraper.tweepy.tweet_api_config import TweetApiConfig
+TWITTER_consumer_key = TweetApiConfig().TWITTER_consumer_key
+TWITTER_consumer_secret = TweetApiConfig().TWITTER_consumer_secret
+TWITTER_access_token = TweetApiConfig().TWITTER_access_token
+TWITTER_access_token_secret = TweetApiConfig().TWITTER_access_token_secret

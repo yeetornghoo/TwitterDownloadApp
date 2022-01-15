@@ -1,9 +1,13 @@
 __author__ = "CH"
 
 import tweepy as tweepy
-from twitterdownloadapp.data_scraper.tweepy.authentication import TweepyAuthentication
-#from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
-
+from tweepy import OAuthHandler
+from twitterdownloadapp.data_scraper.tweepy import (
+    TWITTER_consumer_key,
+    TWITTER_consumer_secret,
+    TWITTER_access_token,
+    TWITTER_access_token_secret)
+from twitterdownloadapp.util.app_logging import AppLogging
 
 BATCH_COUNT = 5
 
@@ -50,29 +54,49 @@ def process_stream_tweet(data, f):
 """
 
 
-class ProcessTweepyCursor:
+def get_tweepy_api():
+    api = None
+    try:
+        auth = OAuthHandler(
+            TWITTER_consumer_key,
+            TWITTER_consumer_secret,
+        )
+        auth.set_access_token(
+            TWITTER_access_token,
+            TWITTER_access_token_secret,
+        )
+        api = tweepy.API(auth, wait_on_rate_limit=True)
+    except Exception as e:
+        AppLogging().exception(e)
+    finally:
+        return api
 
+
+class ProcessTweepyCursor:
     search_words = "['s','sa']"
     geo_code = "4.7259518408729,101.8085617846325,500km"
     auth = None
     api = None
 
-    def __init__(self, _search_words: str, _geo_code: str):
-        self.search_words = _search_words
-        self.geo_code = _geo_code
-        self.api = TweepyAuthentication.get_tweepy_api()
+    def __init__(self, search_words: str, geo_code: str):
+        if search_words is not None:
+            self.search_words = search_words
+        if geo_code is not None:
+            self.geo_code = geo_code
+        self.api = get_tweepy_api()
 
     def run(self):
-        print("---------------ProcessTweepy-----------")
-        # DOWNLOAD
-        tweets = tweepy.Cursor(
-             self.api.search_tweets, q=self.search_words, geocode=self.geo_code
-        ).items(BATCH_COUNT)
+        try:
+            # DOWNLOAD
+            tweets = tweepy.Cursor(
+                self.api.search_tweets, q=self.search_words, geocode=self.geo_code
+            ).items(BATCH_COUNT)
 
-        for tweet in tweets:
-             print(tweet)
-        #     # self.conn.insert_raw_twitter(tweet)
-
+            for tweet in tweets:
+                print(tweet)
+                # self.conn.insert_raw_twitter(tweet)
+        except Exception as e:
+            AppLogging().exception(e)
 
 # class TweepyCursor:
 #
