@@ -1,8 +1,8 @@
 __author__ = "CH"
 
 import tweepy as tweepy
-from data_scraper import api, search_words
-from data_scraper.controller.tweepy.tweepy_stream import TweepyStream
+from twitterdownloadapp.data_scraper import api, search_words
+from twitterdownloadapp.data_scraper import TweepyStream
 
 """
 location_regex = '(?i)(malaysia|kl|selangor|johor|perlis|kedah|sabah|sarawak' \

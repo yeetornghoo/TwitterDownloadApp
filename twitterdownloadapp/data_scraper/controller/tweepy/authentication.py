@@ -1,8 +1,7 @@
-import tweepy
 from tweepy import OAuthHandler
 
 from config.constant import PROJECT_ROOT
-from helper import string_helper
+from twitterdownloadapp.helper import string_helper
 
 api_file_key_path = "{}/data_scraper/key/twitter_api.key".format(PROJECT_ROOT)
 

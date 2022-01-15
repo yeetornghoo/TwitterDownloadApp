@@ -1,6 +1,6 @@
 __author__ = "CH"
 
-from data_scraper.controller.tweepy.process import ProcessTweepy
+from twitterdownloadapp.data_scraper import ProcessTweepy
 
 if __name__ == "__main__":
     try:

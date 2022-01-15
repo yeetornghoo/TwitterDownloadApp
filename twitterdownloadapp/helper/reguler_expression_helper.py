@@ -1,6 +1,6 @@
 __author__ = "CH"
 
-from data_scraper import search_location_list
+from twitterdownloadapp.data_scraper import search_location_list
 
 
 def get_twitter_location_regexp_filter():
