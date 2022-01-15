@@ -3,7 +3,7 @@ import tweepy
 from config.constant import PROJECT_ROOT
 from twitterdownloadapp.data_scraper import get_oauth_handler
 from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
-from twitterdownloadapp.helper import file_helper
+from helper import file_helper
 
 auth = get_oauth_handler()
 api = tweepy.API(auth, wait_on_rate_limit=True)
