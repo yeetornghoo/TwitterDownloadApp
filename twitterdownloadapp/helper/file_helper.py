@@ -1,8 +1,8 @@
 import shutil
 import os
 #import pandas as pd
-from helper import datetime_helper
-from helper import config_helper
+from twitterdownloadapp.helper import datetime_helper
+from twitterdownloadapp.helper import config_helper
 
 
 def get_line_from_file(file_path):

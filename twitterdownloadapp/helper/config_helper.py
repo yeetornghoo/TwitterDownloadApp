@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from helper import get_items_from_file
+from twitterdownloadapp.helper import get_items_from_file
 
 app_config_file_path = "app.tweet_config"
 ROOT_DIR = os.path.abspath(os.curdir)

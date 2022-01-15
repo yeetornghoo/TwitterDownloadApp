@@ -7,8 +7,8 @@ import tweepy
 
 from twitterdownloadapp import data_scraper
 from twitterdownloadapp.data_scraper import get_oauth_token
-from helper.reguler_expression_helper import get_twitter_location_regexp_filter
-from helper import string_helper
+from twitterdownloadapp.helper.reguler_expression_helper import get_twitter_location_regexp_filter
+from twitterdownloadapp.helper import string_helper
 
 regexp_str = get_twitter_location_regexp_filter()
 location_regexp = re.compile(regexp_str, re.IGNORECASE)
