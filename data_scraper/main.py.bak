@@ -1,0 +1,22 @@
+
+
+from data_scraper.controller.clean_controller import CleanController
+from data_scraper.controller.name_controller import NameController
+from data_scraper.constant import TRADE_DATA_FOLDER
+from helper.FileHelper import read_json_text_file_to_df
+
+
+def find_name(df):
+    NameController(df, "tweet.text").run()
+
+
+def clean():
+    file_path = "{}\{}".format(TRADE_DATA_FOLDER, "raw_trade_20211127-2138.txt")
+    df = read_json_text_file_to_df(file_path)
+    df = CleanController(df, "tweet.text").run()
+    return df
+
+
+if __name__ == '__main__':
+    df = clean()
+    find_name(df)
