@@ -1,6 +1,5 @@
 __author__ = "CH"
 
-import sys
 import json
 import tweepy
 from twitterdownloadapp.data_scraper.tweepy import (
@@ -8,6 +7,7 @@ from twitterdownloadapp.data_scraper.tweepy import (
     TWITTER_consumer_secret,
     TWITTER_access_token,
     TWITTER_access_token_secret)
+from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
 from twitterdownloadapp.util.app_logging import AppLogging
 
 
@@ -22,15 +22,7 @@ class StreamListener(tweepy.Stream):
         json_input = json.loads(data)
         print(json_input)
         if self.save_to_db:
-            print("SAVE TO DB")
-            #data_scraper.conn.insert_raw_twitter(json_input)
-        """
-        if is_desired_location(json_input):
-            json_input["cleaned_test"] = CleanString().run(json_input["text"])
-            print(json_input["cleaned_test"])
-            data_scraper.conn.insert_raw_twitter(json_input)
-            pass
-        """
+            MongoConnection(self.collection_name).insert_raw_twitter(json_input)
         pass
 
     def on_status(self, status):

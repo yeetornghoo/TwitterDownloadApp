@@ -7,6 +7,7 @@ from twitterdownloadapp.data_scraper.tweepy import (
     TWITTER_consumer_secret,
     TWITTER_access_token,
     TWITTER_access_token_secret)
+from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
 from twitterdownloadapp.util.app_logging import AppLogging
 
 BATCH_COUNT = 5
@@ -78,44 +79,39 @@ class ProcessTweepyCursor:
     auth = None
     api = None
 
-    def __init__(self, search_words: str, geo_code: str):
-        if search_words is not None:
-            self.search_words = search_words
-        if geo_code is not None:
-            self.geo_code = geo_code
-        self.api = get_tweepy_api()
+    def __init__(
+            self,
+            save_to_db,
+            collection_name
+    ):
+        self.save_to_db = save_to_db
+        self.collection_name = collection_name
 
-    def run(self):
+    def run(self, search_words, geo_code):
         try:
-            # DOWNLOAD
+
+            if search_words is not None:
+                self.search_words = search_words
+            if geo_code is not None:
+                self.geo_code = geo_code
+
+            AppLogging().info("Search keyword:{} on geocode:{}!".format(self.search_words, self.geo_code))
+
+            # GET TWEEPY CURSOR API
+            self.api = get_tweepy_api()
+            if self.api is None:
+                raise Exception("Tweepy Cursor API failed to initiate")
+
+            AppLogging().info("Tweepy Cursor has started")
+
             tweets = tweepy.Cursor(
                 self.api.search_tweets, q=self.search_words, geocode=self.geo_code
             ).items(BATCH_COUNT)
 
             for tweet in tweets:
                 print(tweet)
-                # self.conn.insert_raw_twitter(tweet)
+                if self.save_to_db:
+                    MongoConnection(self.collection_name).insert_raw_twitter(tweet)
+
         except Exception as e:
             AppLogging().exception(e)
-
-# class TweepyCursor:
-#
-#     BATCH_COUNT = 5
-#
-#     def save_tweets(self, tweets):
-#         for tweet in tweets:
-#             print(tweet)
-#             # self.conn.insert_raw_twitter(tweet)
-#
-#     def download_save(self, locations):
-#         tweets = tweepy.Cursor(
-#             api.search_tweets, q=search_words, geocode=locations
-#         ).items(self.BATCH_COUNT)
-#         self.save_tweets(tweets)
-#
-#     def process_west_malaysia(self):
-#         locations = "4.7259518408729,101.8085617846325,500km"
-#         self.download_save(locations)
-#
-#     def run(self):
-#         self.process_west_malaysia()

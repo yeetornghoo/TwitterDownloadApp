@@ -1,11 +1,11 @@
 __author__ = "CH"
 
 from pymongo import MongoClient
-
 from twitterdownloadapp.db.mongo.mongo_config import MongoDBConfig
 
-client = MongoClient(MongoDBConfig.MONGO_DB_CONNECTION_STRING)
-db_conn = client[MongoDBConfig.MONGO_DB_NAME]
+# INITIATE MONGO DB
+client = MongoClient(MongoDBConfig().MONGO_DB_CONNECTION_STRING)
+db_conn = client[MongoDBConfig().MONGO_DB_NAME]
 
 
 class MongoConnection:
