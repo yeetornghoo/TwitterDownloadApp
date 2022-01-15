@@ -1,8 +1,9 @@
 __author__ = "CH"
 
 import tweepy as tweepy
-from twitterdownloadapp.data_scraper.tweepy.authentication import get_oauth_handler
-from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
+from twitterdownloadapp.data_scraper.tweepy.authentication import TweepyAuthentication
+#from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
+
 
 BATCH_COUNT = 5
 
@@ -48,29 +49,28 @@ def process_stream_tweet(data, f):
         f.write('\n')
 """
 
-# auth = get_oauth_handler()
-# api = tweepy.API(auth, wait_on_rate_limit=True)
-# conn = MongoConnection()
 
+class ProcessTweepyCursor:
 
-class ProcessTweepy:
-
-    search_words = "apple"
+    search_words = "['s','sa']"
     geo_code = "4.7259518408729,101.8085617846325,500km"
+    auth = None
+    api = None
 
     def __init__(self, _search_words: str, _geo_code: str):
         self.search_words = _search_words
         self.geo_code = _geo_code
+        self.api = TweepyAuthentication.get_tweepy_api()
 
     def run(self):
         print("---------------ProcessTweepy-----------")
         # DOWNLOAD
-        # tweets = tweepy.Cursor(
-        #     tweepy.api.search_tweets, q=self.search_words, geocode=self.geo_code
-        # ).items(BATCH_COUNT)
-        #
-        # for tweet in tweets:
-        #     print(tweet)
+        tweets = tweepy.Cursor(
+             self.api.search_tweets, q=self.search_words, geocode=self.geo_code
+        ).items(BATCH_COUNT)
+
+        for tweet in tweets:
+             print(tweet)
         #     # self.conn.insert_raw_twitter(tweet)
 
 
