@@ -7,7 +7,9 @@ import tweepy
 
 from twitterdownloadapp import data_scraper
 from twitterdownloadapp.data_scraper import get_oauth_token
-from twitterdownloadapp.helper.reguler_expression_helper import get_twitter_location_regexp_filter
+from twitterdownloadapp.helper.reguler_expression_helper import (
+    get_twitter_location_regexp_filter,
+)
 from twitterdownloadapp.helper import string_helper
 
 regexp_str = get_twitter_location_regexp_filter()
@@ -34,7 +36,7 @@ class StreamListener(tweepy.Stream):
     def on_data(self, data):
         json_input = json.loads(data)
         print(json_input)
-        #data_scraper.conn.insert_raw_twitter(json_input)
+        # data_scraper.conn.insert_raw_twitter(json_input)
         """
         if is_desired_location(json_input):
             json_input["cleaned_test"] = CleanString().run(json_input["text"])
@@ -105,7 +107,7 @@ class TweepyStream:
     def users(self):
         print("USERS")
         stream = get_tweepy_stream()
-        stream.filter(follow=['16389180'], threaded=True)
+        stream.filter(follow=["16389180"], threaded=True)
 
     def run(self):
         stream = get_tweepy_stream()

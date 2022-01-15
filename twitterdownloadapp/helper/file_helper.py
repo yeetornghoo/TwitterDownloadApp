@@ -1,6 +1,7 @@
 import shutil
 import os
-#import pandas as pd
+
+# import pandas as pd
 from twitterdownloadapp.helper import datetime_helper
 from twitterdownloadapp.helper import config_helper
 
@@ -29,7 +30,7 @@ def get_items_from_file(file_path):
                 if items is not None and len(items) >= 2:
                     config_key = items[0].strip()
                     config_value = items[1].strip()
-                    dict_item = {config_key:config_value}
+                    dict_item = {config_key: config_value}
                     dict_items.update(dict_item)
     except ValueError:
         print("Error")
