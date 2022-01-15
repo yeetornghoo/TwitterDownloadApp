@@ -5,10 +5,10 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as readme_file:
     readme = readme_file.read()
 
-requirements = ["ipython>=6", "nbformat>=4", "nbconvert>=5", "requests>=2"]
+requirements = ["pymongo==4.0", "tweepy==4.4.0"]
 
 setup(
-    name="TwitterDownloadApp",
+    name="twitterdownloadapp",
     version="0.0.1",
     author="Carlson Hoo",
     author_email="carlson.hoo@gmail.com",

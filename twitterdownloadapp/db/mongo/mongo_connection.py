@@ -1,23 +1,29 @@
 __author__ = "CH"
 
 from pymongo import MongoClient
-from config.db_config import MongoDB
+from twitterdownloadapp.db.mongo.mongo_config import MongoDBConfig
 
-client = MongoClient(MongoDB.MONGO_DB_CONNECTION_STRING)
-db_conn = client[MongoDB.MONGO_DB_NAME]
-COLLECTION_malaysia_politic_tweets = "raw_malaysia_politic_tweets"
+# INITIATE MONGO DB
+client = MongoClient(MongoDBConfig().MONGO_DB_CONNECTION_STRING)
+db_conn = client[MongoDBConfig().MONGO_DB_NAME]
 
 
 class MongoConnection:
+    mongo_client = None
+    collection_name: str = ""
+
+    def __init__(self, _collection_name: str):
+        self.collection_name = _collection_name
+
     def insert_raw_twitter(self, input_object):
         try:
-            insert_collections(COLLECTION_malaysia_politic_tweets, input_object)
+            insert_collections(self.collection_name, input_object)
         except Exception as e:
             print(e)
 
     def query_raw_twitter(self, input_query):
         try:
-            return query_collections(COLLECTION_malaysia_politic_tweets, input_query)
+            return query_collections(self.collection_name, input_query)
         except Exception as e:
             print(e)
 
