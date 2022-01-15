@@ -1,6 +1,10 @@
 __author__ = "CH"
 
 import tweepy as tweepy
+
+from twitterdownloadapp.data_scraper.tweepy.authentication import get_oauth_handler
+from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
+
 BATCH_COUNT = 5
 
 """
@@ -45,6 +49,10 @@ def process_stream_tweet(data, f):
         f.write('\n')
 """
 
+auth = get_oauth_handler()
+api = tweepy.API(auth, wait_on_rate_limit=True)
+conn = MongoConnection()
+
 
 class ProcessTweepy:
 
@@ -56,15 +64,16 @@ class ProcessTweepy:
         self.geo_code = _geo_code
 
     def run(self):
-
+        print("---------------ProcessTweepy-----------")
         # DOWNLOAD
-        tweets = tweepy.Cursor(
-            tweepy.api.search_tweets, q=self.search_words, geocode=self.geo_code
-        ).items(BATCH_COUNT)
+        # tweets = tweepy.Cursor(
+        #     tweepy.api.search_tweets, q=self.search_words, geocode=self.geo_code
+        # ).items(BATCH_COUNT)
+        #
+        # for tweet in tweets:
+        #     print(tweet)
+        #     # self.conn.insert_raw_twitter(tweet)
 
-        for tweet in tweets:
-            print(tweet)
-            # self.conn.insert_raw_twitter(tweet)
 
 # class TweepyCursor:
 #

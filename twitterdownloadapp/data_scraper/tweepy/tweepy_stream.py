@@ -11,6 +11,7 @@ from twitterdownloadapp.helper.reguler_expression_helper import (
     get_twitter_location_regexp_filter,
 )
 from twitterdownloadapp.helper import string_helper
+
 regexp_str = get_twitter_location_regexp_filter()
 location_regexp = re.compile(regexp_str, re.IGNORECASE)
 
@@ -54,10 +55,18 @@ class StreamListener(tweepy.Stream):
 
 
 def get_tweepy_stream():
-    consumer_key = string_helper.get_value_by_key(TweetApiConfig.TWITTER_consumer_key, "consumer_key")
-    consumer_secret = string_helper.get_value_by_key(TweetApiConfig.TWITTER_consumer_secret, "consumer_secret")
-    access_token = string_helper.get_value_by_key(TweetApiConfig.TWITTER_access_token, "access_token")
-    access_token_secret = string_helper.get_value_by_key(TweetApiConfig.TWITTER_access_token_secret, "access_token_secret")
+    consumer_key = string_helper.get_value_by_key(
+        TweetApiConfig.TWITTER_consumer_key, "consumer_key"
+    )
+    consumer_secret = string_helper.get_value_by_key(
+        TweetApiConfig.TWITTER_consumer_secret, "consumer_secret"
+    )
+    access_token = string_helper.get_value_by_key(
+        TweetApiConfig.TWITTER_access_token, "access_token"
+    )
+    access_token_secret = string_helper.get_value_by_key(
+        TweetApiConfig.TWITTER_access_token_secret, "access_token_secret"
+    )
     return StreamListener(
         consumer_key, consumer_secret, access_token, access_token_secret
     )
