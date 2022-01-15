@@ -2,18 +2,20 @@ __author__ = "CH"
 
 import json
 import re
-
 import tweepy
-
 from twitterdownloadapp import data_scraper
-from twitterdownloadapp.data_scraper import get_oauth_token
+from twitterdownloadapp.data_scraper.tweepy.authentication import get_oauth_handler
+from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
 from twitterdownloadapp.helper.reguler_expression_helper import (
     get_twitter_location_regexp_filter,
 )
 from twitterdownloadapp.helper import string_helper
-
 regexp_str = get_twitter_location_regexp_filter()
 location_regexp = re.compile(regexp_str, re.IGNORECASE)
+
+auth = get_oauth_handler()
+api = tweepy.API(auth, wait_on_rate_limit=True)
+conn = MongoConnection()
 
 
 def is_desired_location(json_input):
@@ -51,11 +53,10 @@ class StreamListener(tweepy.Stream):
 
 
 def get_tweepy_stream():
-    tokens = get_oauth_token()
-    consumer_key = string_helper.get_value_by_key(tokens, "consumer_key")
-    consumer_secret = string_helper.get_value_by_key(tokens, "consumer_secret")
-    access_token = string_helper.get_value_by_key(tokens, "access_token")
-    access_token_secret = string_helper.get_value_by_key(tokens, "access_token_secret")
+    consumer_key = string_helper.get_value_by_key(TweetApiConfig.TWITTER_consumer_key, "consumer_key")
+    consumer_secret = string_helper.get_value_by_key(TweetApiConfig.TWITTER_consumer_secret, "consumer_secret")
+    access_token = string_helper.get_value_by_key(TweetApiConfig.TWITTER_access_token, "access_token")
+    access_token_secret = string_helper.get_value_by_key(TweetApiConfig.TWITTER_access_token_secret, "access_token_secret")
     return StreamListener(
         consumer_key, consumer_secret, access_token, access_token_secret
     )
