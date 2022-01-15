@@ -6,7 +6,8 @@ from twitterdownloadapp.data_scraper.tweepy import (
     TWITTER_consumer_key,
     TWITTER_consumer_secret,
     TWITTER_access_token,
-    TWITTER_access_token_secret)
+    TWITTER_access_token_secret,
+)
 from twitterdownloadapp.db.mongo.mongo_connection import MongoConnection
 from twitterdownloadapp.util.app_logging import AppLogging
 
@@ -79,11 +80,7 @@ class ProcessTweepyCursor:
     auth = None
     api = None
 
-    def __init__(
-            self,
-            save_to_db,
-            collection_name
-    ):
+    def __init__(self, save_to_db, collection_name):
         self.save_to_db = save_to_db
         self.collection_name = collection_name
 
@@ -95,7 +92,11 @@ class ProcessTweepyCursor:
             if geo_code is not None:
                 self.geo_code = geo_code
 
-            AppLogging().info("Search keyword:{} on geocode:{}!".format(self.search_words, self.geo_code))
+            AppLogging().info(
+                "Search keyword:{} on geocode:{}!".format(
+                    self.search_words, self.geo_code
+                )
+            )
 
             # GET TWEEPY CURSOR API
             self.api = get_tweepy_api()

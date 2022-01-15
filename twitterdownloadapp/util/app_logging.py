@@ -11,7 +11,6 @@ def log_format(log_type, msg):
 
 
 class AppLogging:
-
     def info(self, msg):
         log_msg = log_format("INFO", msg)
         print(log_msg)

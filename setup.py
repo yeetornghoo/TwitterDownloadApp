@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as readme_file:
     readme = readme_file.read()
 
-requirements = ["pymongo==4.0"]
+requirements = ["pymongo==4.0", "tweepy==4.4.0"]
 
 setup(
     name="twitterdownloadapp",
