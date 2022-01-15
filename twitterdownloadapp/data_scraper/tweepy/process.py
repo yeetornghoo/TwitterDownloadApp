@@ -2,9 +2,9 @@ __author__ = "CH"
 
 import tweepy as tweepy
 from twitterdownloadapp.data_scraper import api, search_words
-from twitterdownloadapp.data_scraper import TweepyStream
 
 """
+from twitterdownloadapp.data_scraper import TweepyStream
 location_regex = '(?i)(malaysia|kl|selangor|johor|perlis|kedah|sabah|sarawak' \
                  '|kelantan|penang|perak|pahang|terrengganu|malacca' \
                  '|negeri sembilan|kuala lumpur)'
@@ -57,7 +57,7 @@ class ProcessTweepy:
 
         TweepyCursor().run()
         # TweepyStream().run()
-        TweepyStream().users()
+        # TweepyStream().users()
 
 
 class TweepyCursor:

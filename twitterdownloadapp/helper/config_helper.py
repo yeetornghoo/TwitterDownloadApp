@@ -6,13 +6,13 @@ app_config_file_path = "app.tweet_config"
 ROOT_DIR = os.path.abspath(os.curdir)
 
 
-class MongoDBConfig:
+class TweetApiKey:
 
     MONGO_DB_CONNECTION_STRING = ""
     MONGO_DB_NAME = ""
 
     def __init__(self):
-        config_file_path = "{}/config/db_config.ini".format(ROOT_DIR)
+        config_file_path = "{}/config/twitter_api.key".format(ROOT_DIR)
         items = get_items_from_file(config_file_path)
         self.MONGO_DB_CONNECTION_STRING = items["MONGO_DB_CONNECTION_STRING"]
         self.MONGO_DB_NAME = items["MONGO_DB_NAME"]
